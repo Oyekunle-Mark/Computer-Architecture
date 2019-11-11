@@ -83,4 +83,12 @@ class CPU:
 
     def run(self):
         """Run the CPU."""
+        # loop while True
+            # read the memory address stored in the PC and
+            # store it in the a variable IR
+            # set instruction_size to zero
+            # read the byte at PC and store it in opcode
+            # read byte at PC + 1 and store it in operand_a
+            # read byte at PC + 2 and store it in operand_b
+            # add the value of
         pass
