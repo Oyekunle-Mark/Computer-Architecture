@@ -88,6 +88,7 @@ class CPU:
         # set the variable LDI to numeric value 130
         LDI = 130
         # set the variable PRN to numeric value 72
+        PRN = 72
 
         # loop while True
         while True:
@@ -116,10 +117,14 @@ class CPU:
                 instruction_size += 2
 
             # compare if opcode equals PRN
+            elif opcode == PRN:
                 # set variable byte with return value of calling
                 # ram_read() with operand_a as argument
+                byte = self.ram_read(operand_a)
                 # print byte
+                print(byte)
                 # increment instruction_size by operand size 1
+                instruction_size += 1
 
             # add the value of instruction_size to the register PC
             self.pc += instruction_size
