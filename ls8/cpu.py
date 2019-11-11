@@ -86,6 +86,7 @@ class CPU:
         # set the variable HLT to numeric value zero
         HLT = 0
         # set the variable LDI to numeric value 130
+        LDI = 130
 
         # loop while True
         while True:
@@ -105,10 +106,13 @@ class CPU:
             if opcode == HLT:
                 # call sys.exit with a positive integer as parameter
                 sys.exit(1)
-            
+
             # compare if opcode equals LDI
+            elif opcode == LDI:
                 # call ram_write() with operand_b, operand_a as argument
-                # set the instruction_size to the operand size of 2 + 1
+                self.ram_write(operand_b, operand_a)
+                # increment the instruction_size by the operand_size
+                instruction_size += 2
 
             # add the value of instruction_size to the register PC
             self.pc += instruction_size
