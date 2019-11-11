@@ -84,11 +84,17 @@ class CPU:
     def run(self):
         """Run the CPU."""
         # loop while True
+        while True:
             # read the memory address stored in the PC and
-            # store it in the a variable IR
+            # store it in the a variable instruction_register
+            instruction_register = self.pc
             # set instruction_size to zero
+            instruction_size = 0
             # read the byte at PC and store it in opcode
+            opcode = self.ram_read(instruction_register)
             # read byte at PC + 1 and store it in operand_a
+            operand_a = self.ram_read(instruction_register + 1)
             # read byte at PC + 2 and store it in operand_b
-            # add the value of
-        pass
+            operand_b = self.ram_read(instruction_register + 2)
+            # add the value of instruction_size to the register PC
+            self.pc += instruction_size
