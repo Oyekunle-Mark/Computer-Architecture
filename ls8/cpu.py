@@ -51,7 +51,7 @@ class CPU:
         of the ram
         """
         # return value at memory_address
-        pass
+        return self.ram[memory_address]
 
     def ram_write(self, memory_data, memory_address):
         """
@@ -59,7 +59,7 @@ class CPU:
         the ram
         """
         # write memory_data to index memory_address of ram
-        pass
+        self.ram[memory_address] = memory_data
 
     def trace(self):
         """
