@@ -84,13 +84,15 @@ class CPU:
     def run(self):
         """Run the CPU."""
         # set the variable HLT to numeric value zero
+        HLT = 0
+
         # loop while True
         while True:
             # read the memory address stored in the PC and
             # store it in the a variable instruction_register
             instruction_register = self.pc
-            # set instruction_size to zero
-            instruction_size = 0
+            # set instruction_size to default 1
+            instruction_size = 1
             # read the byte at PC and store it in opcode
             opcode = self.ram_read(instruction_register)
             # read byte at PC + 1 and store it in operand_a
@@ -99,7 +101,9 @@ class CPU:
             operand_b = self.ram_read(instruction_register + 2)
 
             # compare if opcode equals HLT
+            if opcode == HLT:
                 # call sys.exit with a positive integer as parameter
+                sys.exit(1)
 
             # add the value of instruction_size to the register PC
             self.pc += instruction_size
