@@ -7,6 +7,9 @@ class CPU:
 
     def __init__(self):
         """Construct a new CPU."""
+        # set memory to a list of 256 zeros
+        # set registers to a list of 8 zeros
+        # set program counter to zero
         pass
 
     def load(self):
