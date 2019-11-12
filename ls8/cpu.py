@@ -112,7 +112,7 @@ class CPU:
                 # call ram_write() with operand_b, operand_a as argument
                 self.ram_write(operand_b, operand_a)
                 # increment the instruction_size by the operand_size
-                instruction_size += 2
+                instruction_size += IR >> 6
 
             # compare if IR equals PRN
             elif IR == PRN:
@@ -122,7 +122,7 @@ class CPU:
                 # print byte_read
                 print(byte_read)
                 # increment instruction_size by operand size 1
-                instruction_size += 1
+                instruction_size += IR >> 6
 
             # add the value of instruction_size to the register PC
             self.pc += instruction_size
