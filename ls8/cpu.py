@@ -145,16 +145,15 @@ class CPU:
 
             # compare if IR equals LDI
             elif IR == LDI:
-                # call ram_write() with operand_b, operand_a as argument
-                self.ram_write(operand_b, operand_a)
+                # set self.reg at index operand_a to operand_b
+                self.reg[operand_a] = operand_b
                 # increment the instruction_size by the operand_size
                 instruction_size += IR >> 6
 
             # compare if IR equals PRN
             elif IR == PRN:
-                # set variable byte_read with return value of calling
-                # ram_read() with operand_a as argument
-                byte_read = self.ram_read(operand_a)
+                # get the value at index operand_a of self.reg
+                byte_read = self.reg[operand_a]
                 # print byte_read
                 print(byte_read)
                 # increment instruction_size by operand size 1
