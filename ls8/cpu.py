@@ -52,10 +52,15 @@ class CPU:
 
     def alu(self, op, reg_a, reg_b):
         """ALU operations."""
+        # set the variable MUL to it's numberic value
 
         if op == "ADD":
             self.reg[reg_a] += self.reg[reg_b]
         # elif op == "SUB": etc
+
+        # compare if op equals MUL
+            # set self.reg at index reg_a to the value at self.reg at index reg_a
+            # multiplied by value at self.reg at index reg_b
         else:
             raise Exception("Unsupported ALU operation")
 
@@ -116,6 +121,15 @@ class CPU:
             # read byte at PC + 2 and store it in operand_b
             operand_b = self.ram_read(self.pc + 2)
 
+            # the third bit in the IR indicates if the operations is to
+            # be performed by the ALU, we have to extract it
+            # mask IR by 00100000
+            # bitwise shift it to the right 5 times and store the result in is_alu_operation
+            # check if is_alu_operation is true
+                # call alu with IR, operand_a, operand_b
+                # increment instruction size by the operand size
+
+            # change this to an elif
             # compare if IR equals HLT
             if IR == HLT:
                 # call sys.exit with a zero as parameter

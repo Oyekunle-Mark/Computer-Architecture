@@ -237,7 +237,7 @@ One you run it with `python3 ls8.py examples/mult.ls8`, you should see:
 
 Check the LS-8 spec for what the `MUL` instruction does.
 
-> Note: `MUL` is the responsiblity of the ALU, so it would be nice if your code
+> Note: `MUL` is the responsibility of the ALU, so it would be nice if your code
 > eventually called the `alu()` function with appropriate arguments to get the
 > work done.
 
