@@ -3,7 +3,19 @@
 """Main."""
 
 import sys
+import argparse
 from cpu import *
+
+# instantiate the argument parser
+parser = argparse.ArgumentParser()
+
+# add the filename argument to the parser
+parser.add_argument("filename", help="The file to be executed")
+
+# parse to get the argument
+args = parser.parse_args()
+
+print(args.filename)
 
 cpu = CPU()
 
