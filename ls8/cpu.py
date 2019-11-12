@@ -19,7 +19,8 @@ class CPU:
         # set the branch table to am empty dictionary
         self.branch_table = {}
 
-         # set the variable HLT to numeric value
+        # Store the numeric values of opcodes
+        # set the variable HLT to numeric value
         HLT = 0b00000001
         # set the variable LDI to numeric value
         LDI = 0b10000010
@@ -122,19 +123,12 @@ class CPU:
 
     def run(self):
         """Run the CPU."""
-        # # set the variable HLT to numeric value
-        # HLT = 0b00000001
-        # # set the variable LDI to numeric value
-        # LDI = 0b10000010
-        # # set the variable PRN to numeric value
-        # PRN = 0b01000111
-
         # loop while True
         while True:
             # read a copy of the current instruction and
             # store it in the a variable IR
             IR = self.ram_read(self.pc)
-            # set instruction_size to default 1
+            # reset the instruction_size to 1
             self.instruction_size = 1
             # read byte at PC + 1 and store it in operand_a
             operand_a = self.ram_read(self.pc + 1)
@@ -155,28 +149,10 @@ class CPU:
                 # increment instruction size by the operand size
                 self.instruction_size += IR >> 6
 
-            # # compare if IR equals HLT
-            # elif IR == HLT:
-            #     # call sys.exit with a zero as parameter
-            #     sys.exit(0)
-
-            # # compare if IR equals LDI
-            # elif IR == LDI:
-            #     # set self.reg at index operand_a to operand_b
-            #     self.reg[operand_a] = operand_b
-            #     # increment the instruction_size by the operand_size
-            #     instruction_size += IR >> 6
-
-            # # compare if IR equals PRN
-            # elif IR == PRN:
-            #     # get the value at index operand_a of self.reg
-            #     byte_read = self.reg[operand_a]
-            #     # print byte_read
-            #     print(byte_read)
-            #     # increment instruction_size by operand size 1
-            #     instruction_size += IR >> 6
-
+            # if not an alu operation, use the branch table
+            # to find the right method
             else:
+                # call branch table at index IR, and pass in IR, operand_a and operand_b as args.
                 self.branch_table[IR](IR, operand_a, operand_b)
 
             # add the value of instruction_size to the register PC
