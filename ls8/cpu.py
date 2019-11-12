@@ -17,10 +17,10 @@ class CPU:
 
     def load(self, filename):
         """Load a program into memory."""
+        # initialize address to zero
         address = 0
 
-        # For now, we've just hardcoded a program:
-
+        # remove the program list
         program = [
             # From print8.ls8
             0b10000010,  # LDI R0,8
@@ -31,6 +31,18 @@ class CPU:
             0b00000001,  # HLT
         ]
 
+        # open file name using the with command
+            # loop through every line in f
+                # split the line on an #
+                # initialize command to the left item in the split operation
+                # and call strip on it
+                # check if command is an empty string
+                    # continue
+                # convert the binary command to integer using the int function
+                # add command to self.ram at index address
+                # increment address
+
+        # remove this block of code
         for instruction in program:
             self.ram[address] = instruction
             address += 1
