@@ -29,10 +29,12 @@ class CPU:
                 # initialize command to the left item in the split operation
                 # and call strip on it
                 command = split_line[0].strip()
+
                 # check if command is an empty string
                 if command == "":
                     # it's a comment, continue
                     continue
+                
                 # convert the binary command to integer using the int function
                 command = int(command, 2)
                 # add command to self.ram at index address

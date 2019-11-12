@@ -10,7 +10,7 @@ from cpu import *
 parser = argparse.ArgumentParser()
 
 # add the filename argument to the parser
-parser.add_argument("filename", help="The file to be executed")
+parser.add_argument("filename", help="The name of the file to be executed")
 
 # parse to get the argument
 args = parser.parse_args()
