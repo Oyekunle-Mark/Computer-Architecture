@@ -15,9 +15,11 @@ parser.add_argument("filename", help="The file to be executed")
 # parse to get the argument
 args = parser.parse_args()
 
-print(args.filename)
-
+# instantiate the CPU
 cpu = CPU()
 
-cpu.load()
+# load a program with name <filename>
+cpu.load(args.filename)
+
+# execute the program by calling the run method
 cpu.run()

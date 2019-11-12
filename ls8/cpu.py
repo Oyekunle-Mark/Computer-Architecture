@@ -15,9 +15,8 @@ class CPU:
         # set program counter to zero
         self.pc = 0
 
-    def load(self):
+    def load(self, filename):
         """Load a program into memory."""
-
         address = 0
 
         # For now, we've just hardcoded a program:
