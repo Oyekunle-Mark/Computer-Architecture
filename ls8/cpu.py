@@ -41,7 +41,7 @@ class CPU:
                     # convert the binary command to integer using the int function
                     command = int(command, 2)
                     # add command to self.ram at index address
-                    self.ram[address] = command
+                    self.ram_write(command, address)
                     # increment address
                     address += 1
         except FileNotFoundError:
