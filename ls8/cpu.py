@@ -83,41 +83,39 @@ class CPU:
 
     def run(self):
         """Run the CPU."""
-        # set the variable HLT to numeric value zero
-        HLT = 0
-        # set the variable LDI to numeric value 130
-        LDI = 130
-        # set the variable PRN to numeric value 71
-        PRN = 71
+        # set the variable HLT to numeric value
+        HLT = 0b00000001
+        # set the variable LDI to numeric value
+        LDI = 0b10000010
+        # set the variable PRN to numeric value
+        PRN = 0b01000111
 
         # loop while True
         while True:
-            # read the memory address stored in the PC and
-            # store it in the a variable instruction_register
-            instruction_register = self.pc
+            # read a copy of the current instruction and
+            # store it in the a variable IR
+            IR = self.ram_read(self.pc)
             # set instruction_size to default 1
             instruction_size = 1
-            # read the byte at PC and store it in opcode
-            opcode = self.ram_read(instruction_register)
             # read byte at PC + 1 and store it in operand_a
-            operand_a = self.ram_read(instruction_register + 1)
+            operand_a = self.ram_read(self.pc + 1)
             # read byte at PC + 2 and store it in operand_b
-            operand_b = self.ram_read(instruction_register + 2)
+            operand_b = self.ram_read(self.pc + 2)
 
-            # compare if opcode equals HLT
-            if opcode == HLT:
-                # call sys.exit with a positive integer as parameter
-                sys.exit(1)
+            # compare if IR equals HLT
+            if IR == HLT:
+                # call sys.exit with a zero as parameter
+                sys.exit(0)
 
-            # compare if opcode equals LDI
-            elif opcode == LDI:
+            # compare if IR equals LDI
+            elif IR == LDI:
                 # call ram_write() with operand_b, operand_a as argument
                 self.ram_write(operand_b, operand_a)
                 # increment the instruction_size by the operand_size
                 instruction_size += 2
 
-            # compare if opcode equals PRN
-            elif opcode == PRN:
+            # compare if IR equals PRN
+            elif IR == PRN:
                 # set variable byte_read with return value of calling
                 # ram_read() with operand_a as argument
                 byte_read = self.ram_read(operand_a)
