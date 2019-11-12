@@ -17,30 +17,38 @@ class CPU:
 
     def load(self, filename):
         """Load a program into memory."""
-        # initialize address to zero
-        address = 0
 
-        # open file name using the with command
-        with open(filename, "r") as f:
-            # loop through every line in f
-            for line in f:
-                # split the line on an #
-                split_line = line.split("#")
-                # initialize command to the left item in the split operation
-                # and call strip on it
-                command = split_line[0].strip()
+        # handle exception with a try/except block
+        try:
+            # initialize address to zero
+            address = 0
 
-                # check if command is an empty string
-                if command == "":
-                    # it's a comment, continue
-                    continue
-                
-                # convert the binary command to integer using the int function
-                command = int(command, 2)
-                # add command to self.ram at index address
-                self.ram[address] = command
-                # increment address
-                address += 1
+            # open file name using the with command
+            with open(filename, "r") as f:
+                # loop through every line in f
+                for line in f:
+                    # split the line on an #
+                    split_line = line.split("#")
+                    # initialize command to the left item in the split operation
+                    # and call strip on it
+                    command = split_line[0].strip()
+
+                    # check if command is an empty string
+                    if command == "":
+                        # it's a comment, continue
+                        continue
+
+                    # convert the binary command to integer using the int function
+                    command = int(command, 2)
+                    # add command to self.ram at index address
+                    self.ram[address] = command
+                    # increment address
+                    address += 1
+        except FileNotFoundError:
+            # print error message
+            print(f"Error: No such file or directory: {filename}")
+            # call sys.exit with a positive integer
+            sys.exit(1)
 
     def alu(self, op, reg_a, reg_b):
         """ALU operations."""
