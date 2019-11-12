@@ -131,6 +131,7 @@ class CPU:
             masked_IR = IR & 0b00100000
             # bitwise shift it to the right 5 times and store the result in is_alu_operation
             is_alu_operation = masked_IR >> 5
+
             # check if is_alu_operation is true
             if is_alu_operation:
                 # call alu with IR, operand_a, operand_b
