@@ -14,6 +14,22 @@ class CPU:
         self.reg = [0] * 8
         # set program counter to zero
         self.pc = 0
+        # set instruction_size to default 1
+        self.instruction_size = 1
+        # set the branch table to am empty dictionary
+        self.branch_table = {}
+
+         # set the variable HLT to numeric value
+        HLT = 0b00000001
+        # set the variable LDI to numeric value
+        LDI = 0b10000010
+        # set the variable PRN to numeric value
+        PRN = 0b01000111
+
+        # set up the branch table
+        self.branch_table[HLT] = self.handle_hlt
+        self.branch_table[LDI] = self.handle_ldi
+        self.branch_table[PRN] = self.handle_prn
 
     def load(self, filename):
         """Load a program into memory."""
@@ -106,12 +122,12 @@ class CPU:
 
     def run(self):
         """Run the CPU."""
-        # set the variable HLT to numeric value
-        HLT = 0b00000001
-        # set the variable LDI to numeric value
-        LDI = 0b10000010
-        # set the variable PRN to numeric value
-        PRN = 0b01000111
+        # # set the variable HLT to numeric value
+        # HLT = 0b00000001
+        # # set the variable LDI to numeric value
+        # LDI = 0b10000010
+        # # set the variable PRN to numeric value
+        # PRN = 0b01000111
 
         # loop while True
         while True:
@@ -119,7 +135,7 @@ class CPU:
             # store it in the a variable IR
             IR = self.ram_read(self.pc)
             # set instruction_size to default 1
-            instruction_size = 1
+            self.instruction_size = 1
             # read byte at PC + 1 and store it in operand_a
             operand_a = self.ram_read(self.pc + 1)
             # read byte at PC + 2 and store it in operand_b
@@ -137,28 +153,49 @@ class CPU:
                 # call alu with IR, operand_a, operand_b
                 self.alu(IR, operand_a, operand_b)
                 # increment instruction size by the operand size
-                instruction_size += IR >> 6
+                self.instruction_size += IR >> 6
 
-            # compare if IR equals HLT
-            elif IR == HLT:
-                # call sys.exit with a zero as parameter
-                sys.exit(0)
+            # # compare if IR equals HLT
+            # elif IR == HLT:
+            #     # call sys.exit with a zero as parameter
+            #     sys.exit(0)
 
-            # compare if IR equals LDI
-            elif IR == LDI:
-                # set self.reg at index operand_a to operand_b
-                self.reg[operand_a] = operand_b
-                # increment the instruction_size by the operand_size
-                instruction_size += IR >> 6
+            # # compare if IR equals LDI
+            # elif IR == LDI:
+            #     # set self.reg at index operand_a to operand_b
+            #     self.reg[operand_a] = operand_b
+            #     # increment the instruction_size by the operand_size
+            #     instruction_size += IR >> 6
 
-            # compare if IR equals PRN
-            elif IR == PRN:
-                # get the value at index operand_a of self.reg
-                byte_read = self.reg[operand_a]
-                # print byte_read
-                print(byte_read)
-                # increment instruction_size by operand size 1
-                instruction_size += IR >> 6
+            # # compare if IR equals PRN
+            # elif IR == PRN:
+            #     # get the value at index operand_a of self.reg
+            #     byte_read = self.reg[operand_a]
+            #     # print byte_read
+            #     print(byte_read)
+            #     # increment instruction_size by operand size 1
+            #     instruction_size += IR >> 6
+
+            else:
+                self.branch_table[IR](IR, operand_a, operand_b)
 
             # add the value of instruction_size to the register PC
-            self.pc += instruction_size
+            self.pc += self.instruction_size
+
+    def handle_hlt(self, op=None, opr1=None, opr2=None):
+        # call sys.exit with a zero as parameter
+        sys.exit(0)
+
+    def handle_ldi(self, op, opr1, opr2):
+        # set self.reg at index operand_a to operand_b
+        self.reg[opr1] = opr2
+        # increment the instruction_size by the operand_size
+        self.instruction_size += op >> 6
+
+    def handle_prn(self, op, opr1, opr2=None):
+        # get the value at index operand_a of self.reg
+        byte_read = self.reg[opr1]
+        # print byte_read
+        print(byte_read)
+        # increment instruction_size by operand size 1
+        self.instruction_size += op >> 6
