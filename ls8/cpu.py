@@ -2,12 +2,18 @@
 
 import sys
 
+
 class CPU:
     """Main CPU class."""
 
     def __init__(self):
         """Construct a new CPU."""
-        pass
+        # set memory to a list of 256 zeros
+        self.ram = [0] * 256
+        # set registers to a list of 8 zeros
+        self.reg = [0] * 8
+        # set program counter to zero
+        self.pc = 0
 
     def load(self):
         """Load a program into memory."""
@@ -18,27 +24,42 @@ class CPU:
 
         program = [
             # From print8.ls8
-            0b10000010, # LDI R0,8
+            0b10000010,  # LDI R0,8
             0b00000000,
             0b00001000,
-            0b01000111, # PRN R0
+            0b01000111,  # PRN R0
             0b00000000,
-            0b00000001, # HLT
+            0b00000001,  # HLT
         ]
 
         for instruction in program:
             self.ram[address] = instruction
             address += 1
 
-
     def alu(self, op, reg_a, reg_b):
         """ALU operations."""
 
         if op == "ADD":
             self.reg[reg_a] += self.reg[reg_b]
-        #elif op == "SUB": etc
+        # elif op == "SUB": etc
         else:
             raise Exception("Unsupported ALU operation")
+
+    def ram_read(self, memory_address):
+        """
+        Returns the value stored at memory_address index
+        of the ram
+        """
+        # return value at memory_address
+        return self.ram[memory_address]
+
+    def ram_write(self, memory_data, memory_address):
+        """
+        Writes memory_data to index memory_address of
+        the ram
+        """
+        # write memory_data to index memory_address of ram
+        self.ram[memory_address] = memory_data
 
     def trace(self):
         """
@@ -48,8 +69,8 @@ class CPU:
 
         print(f"TRACE: %02X | %02X %02X %02X |" % (
             self.pc,
-            #self.fl,
-            #self.ie,
+            # self.fl,
+            # self.ie,
             self.ram_read(self.pc),
             self.ram_read(self.pc + 1),
             self.ram_read(self.pc + 2)
@@ -62,4 +83,46 @@ class CPU:
 
     def run(self):
         """Run the CPU."""
-        pass
+        # set the variable HLT to numeric value
+        HLT = 0b00000001
+        # set the variable LDI to numeric value
+        LDI = 0b10000010
+        # set the variable PRN to numeric value
+        PRN = 0b01000111
+
+        # loop while True
+        while True:
+            # read a copy of the current instruction and
+            # store it in the a variable IR
+            IR = self.ram_read(self.pc)
+            # set instruction_size to default 1
+            instruction_size = 1
+            # read byte at PC + 1 and store it in operand_a
+            operand_a = self.ram_read(self.pc + 1)
+            # read byte at PC + 2 and store it in operand_b
+            operand_b = self.ram_read(self.pc + 2)
+
+            # compare if IR equals HLT
+            if IR == HLT:
+                # call sys.exit with a zero as parameter
+                sys.exit(0)
+
+            # compare if IR equals LDI
+            elif IR == LDI:
+                # call ram_write() with operand_b, operand_a as argument
+                self.ram_write(operand_b, operand_a)
+                # increment the instruction_size by the operand_size
+                instruction_size += IR >> 6
+
+            # compare if IR equals PRN
+            elif IR == PRN:
+                # set variable byte_read with return value of calling
+                # ram_read() with operand_a as argument
+                byte_read = self.ram_read(operand_a)
+                # print byte_read
+                print(byte_read)
+                # increment instruction_size by operand size 1
+                instruction_size += IR >> 6
+
+            # add the value of instruction_size to the register PC
+            self.pc += instruction_size
