@@ -12,6 +12,9 @@ class CPU:
         self.ram = [0] * 256
         # set registers to a list of 8 zeros
         self.reg = [0] * 8
+        # R7 is reserved as the stack pointer (SP)
+        # On power on, r7 is set to 0xF4
+        self.reg[7] = 0xF4
         # set program counter to zero
         self.pc = 0
         # set instruction_size to default 1
