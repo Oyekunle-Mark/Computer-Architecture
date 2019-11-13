@@ -12,7 +12,6 @@
 > registers in the emulator, bitwise-AND the result with 0xFF (255) to keep the
 > register values in that range.
 
-
 ## Internal Registers
 
 * `PC`: Program Counter, address of the currently executing instruction
@@ -20,7 +19,6 @@
 * `MAR`: Memory Address Register, holds the memory address we're reading or writing
 * `MDR`: Memory Data Register, holds the value to write or the value just read
 * `FL`: Flags, see below
-
 
 ## Flags
 
@@ -37,7 +35,6 @@ The register is made up of 8 bits. If a particular bit is set, that flag is "tru
   registerB, zero otherwise.
 * `E` Equal: during a `CMP`, set to 1 if registerA is equal to registerB, zero
   otherwise.
-
 
 ## Memory
 
