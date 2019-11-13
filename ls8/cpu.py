@@ -29,11 +29,13 @@ class CPU:
         LDI = 0b10000010
         # set the variable PRN to numeric value
         PRN = 0b01000111
+        # set the variable PUSH to its numeric  value
 
         # set up the branch table
         self.branch_table[HLT] = self.handle_hlt
         self.branch_table[LDI] = self.handle_ldi
         self.branch_table[PRN] = self.handle_prn
+        # add the PUSH operation to the branch table
 
     def load(self, filename):
         """Load a program into memory."""
@@ -178,3 +180,10 @@ class CPU:
         print(byte_read)
         # increment instruction_size by operand size 1
         self.instruction_size += op >> 6
+
+    # create method handle_push with like signature to the other handle methods
+        # Decrement the stack pointer
+        # simply decrement the value at self.reg[7]
+        # get the value at the index operand_a of self.reg
+        # write the value to self.ram using ram_write passing the value and stack pointer
+        # increment the instruction_size by the operand_size
