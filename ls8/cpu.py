@@ -161,31 +161,29 @@ class CPU:
             # if not an alu operation, use the branch table
             # to find the right method
             else:
-                # call branch table at index IR, and pass in IR, operand_a and operand_b as args.
-                self.branch_table[IR](IR, operand_a, operand_b)
+                # call branch table at index IR, and pass in operand_a and operand_b as args.
+                self.branch_table[IR](operand_a, operand_b)
+                # increment the instruction_size by the operand_size
+                self.instruction_size += IR >> 6
 
             # add the value of instruction_size to the register PC
             self.pc += self.instruction_size
 
-    def handle_hlt(self, op=None, opr1=None, opr2=None):
+    def handle_hlt(self, opr1=None, opr2=None):
         # call sys.exit with a zero as parameter
         sys.exit(0)
 
-    def handle_ldi(self, op, opr1, opr2):
+    def handle_ldi(self, opr1, opr2):
         # set self.reg at index opr1 to opr2
         self.reg[opr1] = opr2
-        # increment the instruction_size by the operand_size
-        self.instruction_size += op >> 6
 
-    def handle_prn(self, op, opr1, opr2=None):
+    def handle_prn(self, opr1, opr2=None):
         # get the value at index opr1 of self.reg
         byte_read = self.reg[opr1]
         # print byte_read
         print(byte_read)
-        # increment instruction_size by operand size 1
-        self.instruction_size += op >> 6
 
-    def handle_push(self, op, opr1, opr2=None):
+    def handle_push(self, opr1, opr2=None):
         # Decrement the stack pointer
         # simply decrement the value at self.reg[7]
         self.reg[7] -= 1
@@ -193,10 +191,8 @@ class CPU:
         byte_read = self.reg[opr1]
         # write the value to self.ram using ram_write passing the value and stack pointer
         self.ram_write(byte_read, self.reg[7])
-        # increment the instruction_size by the operand_size
-        self.instruction_size += op >> 6
 
-    def handle_pop(self, op, opr1, opr2=None):
+    def handle_pop(self, opr1, opr2=None):
         # read the value at sp of self.ram using ram_read
         byte_read = self.ram_read(self.reg[7])
         # write byte_read to the register at index opr1
@@ -204,5 +200,3 @@ class CPU:
         # increment the stack pointer
         # simply increment the value at self.reg[7]
         self.reg[7] += 1
-        # increment the instruction_size by the operand_size
-        self.instruction_size += op >> 6
