@@ -30,9 +30,9 @@ class CPU:
         # set the variable PRN to numeric value
         PRN = 0b01000111
         # set the variable PUSH to its numeric  value
-        PUSH = 0x01000101
+        PUSH = 0b01000101
         # set the variable POP to its numeric  value
-        POP = 0x01000110
+        POP = 0b01000110
 
         # set up the branch table
         self.branch_table[HLT] = self.handle_hlt
