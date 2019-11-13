@@ -31,12 +31,15 @@ class CPU:
         PRN = 0b01000111
         # set the variable PUSH to its numeric  value
         PUSH = 0x01000101
+        # set the variable POP to its numeric  value
+        POP = 0x01000110
 
         # set up the branch table
         self.branch_table[HLT] = self.handle_hlt
         self.branch_table[LDI] = self.handle_ldi
         self.branch_table[PRN] = self.handle_prn
         self.branch_table[PUSH] = self.handle_push
+        self.branch_table[POP] = self.handle_pop
 
     def load(self, filename):
         """Load a program into memory."""
@@ -190,5 +193,16 @@ class CPU:
         byte_read = self.reg[opr1]
         # write the value to self.ram using ram_write passing the value and stack pointer
         self.ram_write(byte_read, self.reg[7])
+        # increment the instruction_size by the operand_size
+        self.instruction_size += op >> 6
+
+    def handle_pop(self, op, opr1, opr2=None):
+        # read the value at sp of self.ram using ram_read
+        byte_read = self.ram_read(self.reg[7])
+        # write byte_read to the register at index opr1
+        self.reg[opr1] = byte_read
+        # increment the stack pointer
+        # simply increment the value at self.reg[7]
+        self.reg[7] += 1
         # increment the instruction_size by the operand_size
         self.instruction_size += op >> 6
