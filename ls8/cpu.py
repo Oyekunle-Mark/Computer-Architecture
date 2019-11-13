@@ -155,17 +155,15 @@ class CPU:
             if is_alu_operation:
                 # call alu with IR, operand_a, operand_b
                 self.alu(IR, operand_a, operand_b)
-                # increment instruction size by the operand size
-                self.instruction_size += IR >> 6
 
             # if not an alu operation, use the branch table
             # to find the right method
             else:
                 # call branch table at index IR, and pass in operand_a and operand_b as args.
                 self.branch_table[IR](operand_a, operand_b)
-                # increment the instruction_size by the operand_size
-                self.instruction_size += IR >> 6
 
+            # increment instruction size by the operand size
+            self.instruction_size += IR >> 6
             # add the value of instruction_size to the register PC
             self.pc += self.instruction_size
 
