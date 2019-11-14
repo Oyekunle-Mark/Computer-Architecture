@@ -32,6 +32,7 @@ class CPU:
         # set the variable POP to its numeric  value
         POP = 0b01000110
         # set the CALL to its numeric  value
+        CALL = 0b01010000
 
         # set up the branch table
         self.branch_table = {
@@ -39,8 +40,8 @@ class CPU:
             LDI: self.handle_ldi,
             PRN: self.handle_prn,
             PUSH: self.handle_push,
-            POP: self.handle_pop
-            # add call and it's handler to the branch table
+            POP: self.handle_pop,
+            CALL: self.handle_call
         }
 
     def load(self, filename):
@@ -155,26 +156,33 @@ class CPU:
 
             # some opcode sets the PC, we need to check for those
             # bitwise shift IR to the right 4 times
+            shifted_IR = IR >> 5
             # mask the result with 0001 and save it in set_pc
+            set_pc = shifted_IR & 0b0001
 
             # check if is_alu_operation is true
             if is_alu_operation:
                 # call alu with IR, operand_a, operand_b
                 self.alu(IR, operand_a, operand_b)
 
-            # if not an alu operation, use the branch table
-            # to find the right method
-            else:
+            # if not an alu operation,
+            # check if present in branch_table
+            elif IR in self.branch_table:
                 # call branch table at index IR, and pass in operand_a and operand_b as args.
                 self.branch_table[IR](operand_a, operand_b)
 
-            # check if current opcode sets the PC
-                # then increment PC as usual
+            # otherwise, that is a bad opcode
+            else:
+                print(f"Does not recognize command {IR}")
+                # call sys.exit with 2
+                sys.exit(2)
 
-            # increment instruction size by the operand size
-            self.instruction_size += IR >> 6
-            # add the value of instruction_size to the register PC
-            self.pc += self.instruction_size
+            # check if current opcode does not set the PC
+            if not set_pc:
+                # increment instruction size by the operand size
+                self.instruction_size += IR >> 6
+                # add the value of instruction_size to the register PC
+                self.pc += self.instruction_size
 
     def handle_hlt(self, opr1, opr2):
         # call sys.exit with a zero as parameter
@@ -209,8 +217,11 @@ class CPU:
         self.reg[7] += 1
 
     def handle_call(self, opr1, opr2):
-        # decrease the SP
-        # push opr2 into the stack
-        # get address at the register immediately after the call opcode i.e opr1
+        # decrement the SP
+        self.reg[7] -= 1
+        # push opr2(the instruction after the call opcode and its operand) into the stack
+        self.ram_write(opr2, self.reg[7])
+        # get address at the register immediately after the call opcode i.e opr1 (where the call wants to go)
+        byte_read = self.reg[opr1]
         # set PC to opr1 address
-        pass
+        self.pc = byte_read
