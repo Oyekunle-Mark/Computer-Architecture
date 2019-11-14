@@ -33,6 +33,7 @@ class CPU:
         POP = 0b01000110
         # set the CALL to its numeric  value
         CALL = 0b01010000
+        # set the RET to its numeric  value
 
         # set up the branch table
         self.branch_table = {
@@ -42,6 +43,7 @@ class CPU:
             PUSH: self.handle_push,
             POP: self.handle_pop,
             CALL: self.handle_call
+            # Add ret and it's method to the branch_table
         }
 
     def load(self, filename):
@@ -157,8 +159,8 @@ class CPU:
             # some opcode sets the PC, we need to check for those
             # bitwise shift IR to the right 4 times
             shifted_IR = IR >> 5
-            # mask the result with 0001 and save it in set_pc
-            set_pc = shifted_IR & 0b0001
+            # mask the result with 0001 and save it in sets_pc
+            sets_pc = shifted_IR & 0b0001
 
             # check if is_alu_operation is true
             if is_alu_operation:
@@ -178,7 +180,7 @@ class CPU:
                 sys.exit(2)
 
             # check if current opcode does not set the PC
-            if not set_pc:
+            if ~sets_pc:
                 # increment instruction size by the operand size
                 self.instruction_size += IR >> 6
                 # add the value of instruction_size to the register PC
@@ -225,3 +227,9 @@ class CPU:
         byte_read = self.reg[opr1]
         # set PC to opr1 address
         self.pc = byte_read
+
+    def handle_ret(self, opr1, opr2):
+        # get the value at the top of the stack and save to return_address
+        # increment SP
+        # set the pc to the return_address
+        pass
