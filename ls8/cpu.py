@@ -45,6 +45,8 @@ class CPU:
         CMP = 0b10100111
         # set the variable JMP to it's numberic value
         JMP = 0b01010100
+        # set the variable JEQ to it's numberic value
+        JEQ = 0b01010101
 
         # set up the branch table
         self.branch_table = {
@@ -58,7 +60,8 @@ class CPU:
             MUL: self.handle_mul,
             ADD: self.handle_add,
             CMP: self.handle_cmp,
-            JMP: self.handle_jmp
+            JMP: self.handle_jmp,
+            JEQ: self.handle_jeq
         }
 
     def load(self, filename):
@@ -245,6 +248,12 @@ class CPU:
     def handle_jmp(self, opr1, opr2):
         # set pc to the address at index opr1 of reg
         self.pc = self.reg[opr1]
+
+    def handle_jeq(self, opr1, opr2):
+        # check if equal flag is set
+        if self.flag == 0b00000001:
+            # set pc to the address at index opr1 of reg
+            self.pc = self.reg[opr1]
 
     def handle_add(self, reg_a, reg_b):
         self.reg[reg_a] += self.reg[reg_b]
