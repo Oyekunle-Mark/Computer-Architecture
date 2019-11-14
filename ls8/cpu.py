@@ -31,6 +31,7 @@ class CPU:
         PUSH = 0b01000101
         # set the variable POP to its numeric  value
         POP = 0b01000110
+        # set the CALL to its numeric  value
 
         # set up the branch table
         self.branch_table = {
@@ -39,6 +40,7 @@ class CPU:
             PRN: self.handle_prn,
             PUSH: self.handle_push,
             POP: self.handle_pop
+            # add call and it's handler to the branch table
         }
 
     def load(self, filename):
@@ -151,6 +153,10 @@ class CPU:
             # bitwise shift it to the right 5 times and store the result in is_alu_operation
             is_alu_operation = masked_IR >> 5
 
+            # some opcode sets the PC, we need to check for those
+            # bitwise shift IR to the right 4 times
+            # mask the result with 0001 and save it in set_pc
+
             # check if is_alu_operation is true
             if is_alu_operation:
                 # call alu with IR, operand_a, operand_b
@@ -161,6 +167,9 @@ class CPU:
             else:
                 # call branch table at index IR, and pass in operand_a and operand_b as args.
                 self.branch_table[IR](operand_a, operand_b)
+
+            # check if current opcode sets the PC
+                # then increment PC as usual
 
             # increment instruction size by the operand size
             self.instruction_size += IR >> 6
@@ -198,3 +207,10 @@ class CPU:
         # increment the stack pointer
         # simply increment the value at self.reg[7]
         self.reg[7] += 1
+
+    def handle_call(self, opr1, opr2):
+        # decrease the SP
+        # push opr2 into the stack
+        # get address at the register immediately after the call opcode i.e opr1
+        # set PC to opr1 address
+        pass
