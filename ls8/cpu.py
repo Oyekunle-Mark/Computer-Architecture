@@ -41,6 +41,8 @@ class CPU:
         MUL = 0b10100010
         # set the variable ADD to it's numberic value
         ADD = 0b10100000
+        # set the variable CMP to it's numberic value
+        CMP = 0b10100111
 
         # set up the branch table
         self.branch_table = {
@@ -52,7 +54,8 @@ class CPU:
             CALL: self.handle_call,
             RET: self.handle_ret,
             MUL: self.handle_mul,
-            ADD: self.handle_add
+            ADD: self.handle_add,
+            CMP: self.handle_cmp
         }
 
     def load(self, filename):
@@ -243,3 +246,21 @@ class CPU:
         # set self.reg at index reg_a to the value at self.reg at index reg_a
         # multiplied by value at self.reg at index reg_b
         self.reg[reg_a] *= self.reg[reg_b]
+
+    def handle_cmp(self, reg_a, reg_b):
+        # set reg_1 to the value in the first register
+        reg_1 = self.reg[reg_a]
+        # set reg_2 to the value in the second register
+        reg_2 = self.reg[reg_b]
+        # check if reg_1 is less than reg_2:
+        if reg_1 < reg_2:
+            # set the Less-than `L` flag to 1
+            self.flag = 0b00000100
+        # check if reg_1 is greater than reg_2:
+        elif reg_1 > reg_2:
+            # set the Greater-than `G` flag to 1
+            self.flag = 0b00000010
+        # otherwise
+        else:
+            # set the Equal `E` flag to 1
+            self.flag = 0b00000001
