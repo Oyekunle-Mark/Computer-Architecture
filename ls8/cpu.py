@@ -259,6 +259,10 @@ class CPU:
         if equal_flag:
             # set pc to the address at index opr1 of reg
             self.pc = self.reg[opr1]
+        # otherwise
+        else:
+            # move on to the next command
+            self.pc += 2
 
     def handle_jne(self, opr1, opr2):
         # get the equal flag
@@ -267,6 +271,10 @@ class CPU:
         if not equal_flag:
             # set pc to the address at index opr1 of reg
             self.pc = self.reg[opr1]
+        # otherwise
+        else:
+            # move on to the next command
+            self.pc += 2
 
     def handle_add(self, reg_a, reg_b):
         self.reg[reg_a] += self.reg[reg_b]
