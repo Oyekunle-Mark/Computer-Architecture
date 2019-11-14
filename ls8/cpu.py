@@ -12,12 +12,13 @@ class CPU:
         self.ram = [0] * 256
         # set registers to a list of 8 zeros
         self.reg = [0] * 8
+        # R7 is reserved as the stack pointer (SP)
+        # On power on, r7 is set to 0xF4
+        self.reg[7] = 0xF4
         # set program counter to zero
         self.pc = 0
         # set instruction_size to default 1
         self.instruction_size = 1
-        # set the branch table to am empty dictionary
-        self.branch_table = {}
 
         # Store the numeric values of opcodes
         # set the variable HLT to numeric value
@@ -26,11 +27,19 @@ class CPU:
         LDI = 0b10000010
         # set the variable PRN to numeric value
         PRN = 0b01000111
+        # set the variable PUSH to its numeric  value
+        PUSH = 0b01000101
+        # set the variable POP to its numeric  value
+        POP = 0b01000110
 
         # set up the branch table
-        self.branch_table[HLT] = self.handle_hlt
-        self.branch_table[LDI] = self.handle_ldi
-        self.branch_table[PRN] = self.handle_prn
+        self.branch_table = {
+            HLT: self.handle_hlt,
+            LDI: self.handle_ldi,
+            PRN: self.handle_prn,
+            PUSH: self.handle_push,
+            POP: self.handle_pop
+        }
 
     def load(self, filename):
         """Load a program into memory."""
@@ -146,32 +155,46 @@ class CPU:
             if is_alu_operation:
                 # call alu with IR, operand_a, operand_b
                 self.alu(IR, operand_a, operand_b)
-                # increment instruction size by the operand size
-                self.instruction_size += IR >> 6
 
             # if not an alu operation, use the branch table
             # to find the right method
             else:
-                # call branch table at index IR, and pass in IR, operand_a and operand_b as args.
-                self.branch_table[IR](IR, operand_a, operand_b)
+                # call branch table at index IR, and pass in operand_a and operand_b as args.
+                self.branch_table[IR](operand_a, operand_b)
 
+            # increment instruction size by the operand size
+            self.instruction_size += IR >> 6
             # add the value of instruction_size to the register PC
             self.pc += self.instruction_size
 
-    def handle_hlt(self, op=None, opr1=None, opr2=None):
+    def handle_hlt(self, opr1, opr2):
         # call sys.exit with a zero as parameter
         sys.exit(0)
 
-    def handle_ldi(self, op, opr1, opr2):
-        # set self.reg at index operand_a to operand_b
+    def handle_ldi(self, opr1, opr2):
+        # set self.reg at index opr1 to opr2
         self.reg[opr1] = opr2
-        # increment the instruction_size by the operand_size
-        self.instruction_size += op >> 6
 
-    def handle_prn(self, op, opr1, opr2=None):
-        # get the value at index operand_a of self.reg
+    def handle_prn(self, opr1, opr2):
+        # get the value at index opr1 of self.reg
         byte_read = self.reg[opr1]
         # print byte_read
         print(byte_read)
-        # increment instruction_size by operand size 1
-        self.instruction_size += op >> 6
+
+    def handle_push(self, opr1, opr2):
+        # Decrement the stack pointer
+        # simply decrement the value at self.reg[7]
+        self.reg[7] -= 1
+        # get the value at the index opr1 of self.reg
+        byte_read = self.reg[opr1]
+        # write the value to self.ram using ram_write passing the value and stack pointer
+        self.ram_write(byte_read, self.reg[7])
+
+    def handle_pop(self, opr1, opr2):
+        # read the value at sp of self.ram using ram_read
+        byte_read = self.ram_read(self.reg[7])
+        # write byte_read to the register at index opr1
+        self.reg[opr1] = byte_read
+        # increment the stack pointer
+        # simply increment the value at self.reg[7]
+        self.reg[7] += 1
