@@ -34,6 +34,7 @@ class CPU:
         # set the CALL to its numeric  value
         CALL = 0b01010000
         # set the RET to its numeric  value
+        RET = 0b00010001
 
         # set up the branch table
         self.branch_table = {
@@ -42,8 +43,8 @@ class CPU:
             PRN: self.handle_prn,
             PUSH: self.handle_push,
             POP: self.handle_pop,
-            CALL: self.handle_call
-            # Add ret and it's method to the branch_table
+            CALL: self.handle_call,
+            RET: self.handle_ret
         }
 
     def load(self, filename):
@@ -230,6 +231,8 @@ class CPU:
 
     def handle_ret(self, opr1, opr2):
         # get the value at the top of the stack and save to return_address
+        return_address = self.ram_read(self.reg[7])
         # increment SP
+        self.reg[7] += 1
         # set the pc to the return_address
-        pass
+        self.pc = return_address
