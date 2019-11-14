@@ -17,6 +17,8 @@ class CPU:
         self.reg[7] = 0xF4
         # set program counter to zero
         self.pc = 0
+        # set the flag to zero
+        self.flag = 0
         # set instruction_size to default 1
         self.instruction_size = 1
 
