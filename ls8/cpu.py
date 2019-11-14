@@ -37,6 +37,10 @@ class CPU:
         CALL = 0b01010000
         # set the RET to its numeric  value
         RET = 0b00010001
+        # set the variable MUL to it's numberic value
+        MUL = 0b10100010
+        # set the variable ADD to it's numberic value
+        ADD = 0b10100000
 
         # set up the branch table
         self.branch_table = {
@@ -46,7 +50,9 @@ class CPU:
             PUSH: self.handle_push,
             POP: self.handle_pop,
             CALL: self.handle_call,
-            RET: self.handle_ret
+            RET: self.handle_ret,
+            MUL: self.handle_mul,
+            ADD: self.handle_add
         }
 
     def load(self, filename):
@@ -86,20 +92,9 @@ class CPU:
 
     def alu(self, op, reg_a, reg_b):
         """ALU operations."""
-        # set the variable MUL to it's numberic value
-        MUL = 0b10100010
-        # set the variable ADD to it's numberic value
-        ADD = 0b10100000
-
-        if op == ADD:
-            self.reg[reg_a] += self.reg[reg_b]
-
-        # compare if op equals MUL
-        elif op == MUL:
-            # set self.reg at index reg_a to the value at self.reg at index reg_a
-            # multiplied by value at self.reg at index reg_b
-            self.reg[reg_a] *= self.reg[reg_b]
-
+        # find the appropriate method with the branch_table
+        if op in self.branch_table:
+            self.branch_table[op](reg_a, reg_b)
         # raise an exception if the op is not supported
         else:
             raise Exception("Unsupported ALU operation")
@@ -240,3 +235,11 @@ class CPU:
         self.reg[7] += 1
         # set the pc to the return_address
         self.pc = return_address
+
+    def handle_add(self, reg_a, reg_b):
+        self.reg[reg_a] += self.reg[reg_b]
+
+    def handle_mul(self, reg_a, reg_b):
+        # set self.reg at index reg_a to the value at self.reg at index reg_a
+        # multiplied by value at self.reg at index reg_b
+        self.reg[reg_a] *= self.reg[reg_b]
