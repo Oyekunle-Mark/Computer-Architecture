@@ -19,8 +19,6 @@ class CPU:
         self.pc = 0
         # set instruction_size to default 1
         self.instruction_size = 1
-        # set the branch table to am empty dictionary
-        self.branch_table = {}
 
         # Store the numeric values of opcodes
         # set the variable HLT to numeric value
@@ -35,11 +33,13 @@ class CPU:
         POP = 0b01000110
 
         # set up the branch table
-        self.branch_table[HLT] = self.handle_hlt
-        self.branch_table[LDI] = self.handle_ldi
-        self.branch_table[PRN] = self.handle_prn
-        self.branch_table[PUSH] = self.handle_push
-        self.branch_table[POP] = self.handle_pop
+        self.branch_table = {
+            HLT: self.handle_hlt,
+            LDI: self.handle_ldi,
+            PRN: self.handle_prn,
+            PUSH: self.handle_push,
+            POP: self.handle_pop
+        }
 
     def load(self, filename):
         """Load a program into memory."""
@@ -167,7 +167,7 @@ class CPU:
             # add the value of instruction_size to the register PC
             self.pc += self.instruction_size
 
-    def handle_hlt(self, opr1=None, opr2=None):
+    def handle_hlt(self, opr1, opr2):
         # call sys.exit with a zero as parameter
         sys.exit(0)
 
@@ -175,13 +175,13 @@ class CPU:
         # set self.reg at index opr1 to opr2
         self.reg[opr1] = opr2
 
-    def handle_prn(self, opr1, opr2=None):
+    def handle_prn(self, opr1, opr2):
         # get the value at index opr1 of self.reg
         byte_read = self.reg[opr1]
         # print byte_read
         print(byte_read)
 
-    def handle_push(self, opr1, opr2=None):
+    def handle_push(self, opr1, opr2):
         # Decrement the stack pointer
         # simply decrement the value at self.reg[7]
         self.reg[7] -= 1
@@ -190,7 +190,7 @@ class CPU:
         # write the value to self.ram using ram_write passing the value and stack pointer
         self.ram_write(byte_read, self.reg[7])
 
-    def handle_pop(self, opr1, opr2=None):
+    def handle_pop(self, opr1, opr2):
         # read the value at sp of self.ram using ram_read
         byte_read = self.ram_read(self.reg[7])
         # write byte_read to the register at index opr1
