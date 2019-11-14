@@ -86,8 +86,10 @@ class CPU:
         """ALU operations."""
         # set the variable MUL to it's numberic value
         MUL = 0b10100010
+        # set the variable ADD to it's numberic value
+        ADD = 0b10100000
 
-        if op == "ADD":
+        if op == ADD:
             self.reg[reg_a] += self.reg[reg_b]
 
         # compare if op equals MUL
