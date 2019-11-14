@@ -43,6 +43,8 @@ class CPU:
         ADD = 0b10100000
         # set the variable CMP to it's numberic value
         CMP = 0b10100111
+        # set the variable JMP to it's numberic value
+        JMP = 0b01010100
 
         # set up the branch table
         self.branch_table = {
@@ -55,7 +57,8 @@ class CPU:
             RET: self.handle_ret,
             MUL: self.handle_mul,
             ADD: self.handle_add,
-            CMP: self.handle_cmp
+            CMP: self.handle_cmp,
+            JMP: self.handle_jmp
         }
 
     def load(self, filename):
@@ -238,6 +241,10 @@ class CPU:
         self.reg[7] += 1
         # set the pc to the return_address
         self.pc = return_address
+
+    def handle_jmp(self, opr1, opr2):
+        # set pc to the address at index opr1 of reg
+        self.pc = self.reg[opr1]
 
     def handle_add(self, reg_a, reg_b):
         self.reg[reg_a] += self.reg[reg_b]
