@@ -161,7 +161,7 @@ class CPU:
 
             # some opcode sets the PC, we need to check for those
             # bitwise shift IR to the right 4 times
-            shifted_IR = IR >> 5
+            shifted_IR = IR >> 4
             # mask the result with 0001 and save it in sets_pc
             sets_pc = shifted_IR & 0b0001
 
@@ -183,7 +183,7 @@ class CPU:
                 sys.exit(2)
 
             # check if current opcode does not set the PC
-            if ~sets_pc:
+            if not sets_pc:
                 # increment instruction size by the operand size
                 self.instruction_size += IR >> 6
                 # add the value of instruction_size to the register PC
@@ -224,8 +224,8 @@ class CPU:
     def handle_call(self, opr1, opr2):
         # decrement the SP
         self.reg[7] -= 1
-        # push opr2(the instruction after the call opcode and its operand) into the stack
-        self.ram_write(opr2, self.reg[7])
+        # push the position of the instruction after the call opcode and its operand into the stack
+        self.ram_write(self.pc + 2, self.reg[7])
         # get address at the register immediately after the call opcode i.e opr1 (where the call wants to go)
         byte_read = self.reg[opr1]
         # set PC to opr1 address
