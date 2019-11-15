@@ -37,20 +37,26 @@ class CPU:
         CALL = 0b01010000
         # set the RET to its numeric  value
         RET = 0b00010001
-        # set the variable MUL to it's numberic value
+        # set the variable MUL to it's numeric value
         MUL = 0b10100010
-        # set the variable ADD to it's numberic value
+        # set the variable ADD to it's numeric value
         ADD = 0b10100000
-        # set the variable CMP to it's numberic value
+        # set the variable CMP to it's numeric value
         CMP = 0b10100111
-        # set the variable JMP to it's numberic value
+        # set the variable JMP to it's numeric value
         JMP = 0b01010100
-        # set the variable JEQ to it's numberic value
+        # set the variable JEQ to it's numeric value
         JEQ = 0b01010101
-        # set the variable JEQ to it's numberic value
+        # set the variable JEQ to it's numeric value
         JNE = 0b01010110
-        # set the variable ST to it's numberic value
+        # set the variable ST to it's numeric value
         ST = 0b10000100
+        # set the variable AND to it's numeric value
+        AND = 0b10101000
+        # set the variable OR to it's numeric value
+        OR = 0b10101010
+        # set the variable XOR to it's numeric value
+        XOR = 0b10101011
 
         # set up the branch table
         self.branch_table = {
@@ -67,7 +73,10 @@ class CPU:
             JMP: self.handle_jmp,
             JEQ: self.handle_jeq,
             JNE: self.handle_jne,
-            ST: self.handle_st
+            ST: self.handle_st,
+            AND: self.handle_and,
+            OR: self.handle_or,
+            XOR: self.handle_xor
         }
 
     def load(self, filename):
@@ -310,3 +319,15 @@ class CPU:
         else:
             # set the Equal `E` flag to 1
             self.flag = 0b00000001
+
+    def handle_and(self, reg_a, reg_b):
+        # bitwise and the values in reg_a and reg_b and store the result in reg_a
+        self.reg[reg_a] = self.reg[reg_a] & self.reg[reg_b]
+
+    def handle_or(self, reg_a, reg_b):
+        # bitwise or the values in reg_a and reg_b and store the result in reg_a
+        self.reg[reg_a] = self.reg[reg_a] | self.reg[reg_b]
+
+    def handle_xor(self, reg_a, reg_b):
+        # bitwise xor the values in reg_a and reg_b and store the result in reg_a
+        self.reg[reg_a] = self.reg[reg_a] ^ self.reg[reg_b]
