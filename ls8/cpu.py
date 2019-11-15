@@ -49,6 +49,8 @@ class CPU:
         JEQ = 0b01010101
         # set the variable JEQ to it's numberic value
         JNE = 0b01010110
+        # set the variable ST to it's numberic value
+        ST = 0b10000100
 
         # set up the branch table
         self.branch_table = {
@@ -64,7 +66,8 @@ class CPU:
             CMP: self.handle_cmp,
             JMP: self.handle_jmp,
             JEQ: self.handle_jeq,
-            JNE: self.handle_jne
+            JNE: self.handle_jne,
+            ST: self.handle_st
         }
 
     def load(self, filename):
@@ -275,6 +278,12 @@ class CPU:
         else:
             # move on to the next command
             self.pc += 2
+
+    def handle_st(self, opr1, opr2):
+        # call ram_write and pass it reg[opr2] as memory data and reg[opr1] as memory address
+        self.ram_write(self.reg[opr2], self.reg[opr1])
+
+    # ALU methods
 
     def handle_add(self, reg_a, reg_b):
         self.reg[reg_a] += self.reg[reg_b]
