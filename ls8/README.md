@@ -355,7 +355,7 @@ Add interrupts to the LS-8 emulator.
 
 **You must have implemented a CPU stack before doing this.**
 
-**You must have implmented the `ST` instruction before doing this.**
+**You must have implemented the `ST` instruction before doing this.**
 
 See the [LS-8
 spec](https://github.com/LambdaSchool/Computer-Architecture-One/blob/master/LS8-SPEC.md)
